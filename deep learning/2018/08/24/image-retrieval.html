@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Build a simple Image Retrieval System with an Autoencoder | Nathan Hubens</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Build a simple Image Retrieval System with an Autoencoder" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Image Retrieval with autoencoders" />
+<meta property="og:description" content="Image Retrieval with autoencoders" />
+<link rel="canonical" href="https://nathanhubens.github.io/posts/deep%20learning/2018/08/24/image-retrieval.html" />
+<meta property="og:url" content="https://nathanhubens.github.io/posts/deep%20learning/2018/08/24/image-retrieval.html" />
+<meta property="og:site_name" content="Nathan Hubens" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-08-24T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Image Retrieval with autoencoders","@type":"BlogPosting","headline":"Build a simple Image Retrieval System with an Autoencoder","dateModified":"2018-08-24T00:00:00-05:00","datePublished":"2018-08-24T00:00:00-05:00","url":"https://nathanhubens.github.io/posts/deep%20learning/2018/08/24/image-retrieval.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://nathanhubens.github.io/posts/deep%20learning/2018/08/24/image-retrieval.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/posts/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://nathanhubens.github.io/posts/feed.xml" title="Nathan Hubens" /><link rel="shortcut icon" type="image/x-icon" href="/posts/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Build a simple Image Retrieval System with an Autoencoder | Nathan Hubens</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Build a simple Image Retrieval System with an Autoencoder" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Image Retrieval with autoencoders" />
+<meta property="og:description" content="Image Retrieval with autoencoders" />
+<link rel="canonical" href="https://nathanhubens.github.io/posts/deep%20learning/2018/08/24/image-retrieval.html" />
+<meta property="og:url" content="https://nathanhubens.github.io/posts/deep%20learning/2018/08/24/image-retrieval.html" />
+<meta property="og:site_name" content="Nathan Hubens" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-08-24T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Image Retrieval with autoencoders","@type":"BlogPosting","headline":"Build a simple Image Retrieval System with an Autoencoder","dateModified":"2018-08-24T00:00:00-05:00","datePublished":"2018-08-24T00:00:00-05:00","url":"https://nathanhubens.github.io/posts/deep%20learning/2018/08/24/image-retrieval.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://nathanhubens.github.io/posts/deep%20learning/2018/08/24/image-retrieval.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://nathanhubens.github.io/posts/feed.xml" title="Nathan Hubens" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/posts/">Nathan Hubens</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/posts/search/">Search</a><a class="page-link" href="/posts/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Build a simple Image Retrieval System with an Autoencoder</h1><p class="page-description">Image Retrieval with autoencoders</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2018-08-24T00:00:00-05:00" itemprop="datePublished">
+        Aug 24, 2018
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      4 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/posts/categories/#Deep Learning">Deep Learning</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#autoencoders">Autoencoders</a></li>
+<li class="toc-entry toc-h2"><a href="#nearest-neighbors">Nearest-neighbors</a></li>
+<li class="toc-entry toc-h2"><a href="#results">Results</a></li>
+<li class="toc-entry toc-h2"><a href="#summary">Summary</a></li>
+</ul><p>Image retrieval is a very active and fast-advancing field of research area in the past decade. The most well-known systems being the Google Image Search and Pinterest Visual Pin Search. In this article, we will learn to build a very simple image retrieval system using a special type of Neural Network, called an <strong>autoencoder</strong>. The way we are going to proceed is in an unsupervised way, i.e without looking at the image labels. Indeed, we will retrieve images only by using their visual contents (textures, shapes,…). This type of image retrieval is called <strong>content-based image retrieval (CBIR)</strong>, opposed to keywords or text-based image retrieval.
+For this article, we will use images of handwritten digits, the MNIST dataset and the Keras deep-learning framework.</p>
+
+<p><img src="/posts/images/autoencoders/mnist.png" alt="" title="The MNIST dataset"></p>
+
+<h2 id="autoencoders">
+<a class="anchor" href="#autoencoders" aria-hidden="true"><span class="octicon octicon-link"></span></a>Autoencoders</h2>
+
+<p>Briefly, autoencoders are neural networks that aims to copy their inputs to their outputs. They work by compressing the input into a latent-space representation, and then reconstructing the output from this representation.This kind of network is composed of two parts :</p>
+
+<ol>
+  <li>
+    <p><strong>Encoder</strong>: This is the part of the network that compresses the input into a latent-space representation. It can be represented by an encoding function $h=f(x)$.</p>
+  </li>
+  <li>
+    <p><strong>Decoder</strong>: This part aims to reconstruct the input from the latent space representation. It can be represented by a decoding function $r=g(h)$.</p>
+  </li>
+</ol>
+
+<p><img src="/posts/images/autoencoders/AE.png" alt="" title="The architecture of an autoencoder"></p>
+
+<p><br></p>
+
+<blockquote>
+  <p><em>If you want to learn more about autoencoders, I suggest you to read <a href="http://localhost:1313/2018/deepinsideautoencoders/">my previous blog post</a>.</em></p>
+</blockquote>
+
+<p><br></p>
+
+<p>This latent representation, or code, is what will interest us here as it is the way the neural network as found to compress the visual content about each image. It means that all of similar images will be encoded (hopefully) in a similar way.
+There are several types of autoencoders but since we are dealing with images, the most efficient is to use a <strong>convolutional autoencoder</strong>, that uses convolution layers to encode and decode images.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="c1"># Encoder
+</span><span class="n">conv1_1</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s">'same'</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">pool1</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s">'same'</span><span class="p">)(</span><span class="n">conv1_1</span><span class="p">)</span>
+<span class="n">conv1_2</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s">'same'</span><span class="p">)(</span><span class="n">pool1</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s">'same'</span><span class="p">)(</span><span class="n">conv1_2</span><span class="p">)</span>
+<span class="c1"># Decoder
+</span><span class="n">conv2_1</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s">'same'</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+<span class="n">up1</span> <span class="o">=</span> <span class="n">UpSampling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))(</span><span class="n">conv2_1</span><span class="p">)</span>
+<span class="n">conv2_2</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s">'same'</span><span class="p">)(</span><span class="n">up1</span><span class="p">)</span>
+<span class="n">up2</span> <span class="o">=</span> <span class="n">UpSampling2D</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))(</span><span class="n">conv2_2</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s">'sigmoid'</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s">'same'</span><span class="p">)(</span><span class="n">up2</span><span class="p">)</span>
+<span class="n">autoencoder</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">r</span><span class="p">)</span>
+<span class="n">autoencoder</span><span class="o">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s">'adam'</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s">'mse'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The first step is thus to train our autoencoder with our training set, to make it learn the way to encode our images into a latent-space representation.
+Once the training as been performed, we only need the encoding part of the network.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">encoder</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">autoencoder</span><span class="o">.</span><span class="nb">input</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">autoencoder</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s">'encoder'</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+</code></pre></div></div>
+<p>This encoder can now be used to encode our query image.</p>
+
+<p><img src="/posts/images/autoencoders/query.png" alt="" title="The query image"></p>
+
+<p>The same encoding must be done on our searching database, where we want to find similar images to the query image. We can then compare the query code to the database code and try to find the closest ones. To perform this comparison, we will use the nearest-neighbors technique.</p>
+
+<h2 id="nearest-neighbors">
+<a class="anchor" href="#nearest-neighbors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nearest-neighbors</h2>
+<p>The way we are going to retrieve the closest codes is by performing the nearest-neighbors algorithm. The principle behind nearest neighbor methods is to find a predefined number of samples closest in distance to the new point. The distance can be any metric measure but the most common choice is the Euclidean distance. For a query image $q$ and a sample $s$, both of dimension $n$, this distance can be computed by the following formula.</p>
+
+<p>\begin{equation} 
+d(q,s) = \sqrt{(q_1-s_1)^2 + (q_2-s_2)^2 + … + (q_n-s_n)^2}
+\end{equation}</p>
+
+<p>In this example, we will retrieve the 5 closest images to the query image.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Fit the NN algorithm to the encoded test set
+</span><span class="n">nbrs</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">codes</span><span class="p">)</span>
+
+<span class="c1"># Find the closest images to the encoded query image
+</span><span class="n">distances</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">nbrs</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">query_code</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 id="results">
+<a class="anchor" href="#results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Results</h2>
+<p>These are the images we retrieved, it looks great ! All the retrieved images are pretty similar to our query image and they also all correspond to the same digit. This shows that the autoencoder, even without being shown the corresponding labels of the images, has found a way to encode similar images in a very similar way.</p>
+
+<p><img src="/posts/images/autoencoders/retrieved.png" alt="" title="The 5 retrieved images"></p>
+
+<h2 id="summary">
+<a class="anchor" href="#summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary</h2>
+<p>In this article, we learned to create a very simple image retrieval system by using an autoencoder and the nearest-neighbors algorithm. We proceeded by training our autoencoder on a big dataset, to make it learn the way to encode efficiently the visual content of each image. We then compared the code of our query image to the codes of our searching dataset and retrieve the 5 closest. We saw that our system was giving pretty good results as the visual content of our 5 retrieved images was close to our query image and also that they all represented the same digit, even without using any label in the process.</p>
+
+<p><br></p>
+
+<p><strong>I hope this article was clear and useful for new Deep Learning practitioners and that it gave you a good insight on what image retrieval with autoencoders looks like ! Feel free to give me feedback or ask me questions is something is not clear enough. The whole code is available at <a href="https://github.com/nathanhubens/Unsupervised-Image-Retrieval">this address!</a></strong></p>
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="nathanhubens/posts"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/posts/deep%20learning/2018/08/24/image-retrieval.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/posts/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/posts/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/posts/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p></p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/nathanhubens" title="nathanhubens"><svg class="svg-icon grey"><use xlink:href="/posts/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/HubensN" title="HubensN"><svg class="svg-icon grey"><use xlink:href="/posts/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
