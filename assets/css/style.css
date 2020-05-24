@@ -432,7 +432,7 @@ table td { text-overflow: ellipsis; overflow: hidden; max-width: 15em; }
 /*----- ADD YOUR STYLES BELOW -------*/
 li .post-meta-description { color: #8db9b9; font-size: 15px; margin-top: .05rem !important; margin-bottom: .05rem !important; }
 
-.post-content a { color: #cb6b3f; }
+.post-content a { color: #ff9021; }
 
 .post-content h1, h2, h3 { color: #a9a9b3; }
 
@@ -440,35 +440,41 @@ li .post-meta-description { color: #8db9b9; font-size: 15px; margin-top: .05rem 
 
 h1, h2, h3 { color: #a9a9b3; }
 
+.page-content { text-align: justify; }
+
 .social-media-list li a, .pagination li a, .pagination li a { display: block; padding: 7.5px; border: 1px solid #292a2d; }
 
 .page-description { color: #8db9b9; }
 
-.page-content a { color: #cb6b3f; }
+.page-content a { color: #ff9021; }
 
 .page-content li { color: #a9a9b3; }
 
-.katex .op-symbol.large-op { font-family: KaTeX_Size2; color: #a9a9b3; }
+.katex .op-symbol.large-op { font-family: KaTeX_Size2; color: #bdc4cf; }
 
-.katex .vlist { color: #a9a9b3; display: table-cell; vertical-align: bottom; position: relative; }
+.katex .vlist { color: #bdc4cf; display: table-cell; vertical-align: bottom; position: relative; }
 
-.site-footer { border-top: 1px solid #000000; color: #cb6b3f; padding: 30px 0; }
+.katex .mathdefault { color: #bdc4cf; font-family: KaTeX_Math; font-style: italic; }
+
+.katex * { color: #bdc4cf; -ms-high-contrast-adjust: none !important; }
+
+.site-footer { border-top: 1px solid #000000; color: #ff9021; padding: 30px 0; }
 
 .site-header { border-top: 5px solid #424242; border-bottom: 1px solid #000000; }
 
 .span a { color: #a9a9b3; }
 
-.post-link { font-weight: normal; color: #cb6b3f; }
+.post-link { font-weight: normal; color: #ff9021; }
 
-.page-meta a, a:visited { color: #cb6b3f; }
+.page-meta a, a:visited { color: #ff9021; }
 
-.page-meta { color: #cb6b3f; }
+.page-meta { color: #ff9021; }
 
-a { color: #cb6b3f; text-decoration: none; }
+a { color: #ff9021; text-decoration: none; }
 
-a:hover { color: #cb6b3f; text-decoration: underline; }
+a:hover { color: #ff9021; text-decoration: underline; }
 
-a:visited { color: #cb6b3f; }
+a:visited { color: #ff9021; }
 
 .u-email { color: #9f9fa9; }
 
@@ -488,7 +494,13 @@ body { color: #9f9fa9; }
 
 .feed-subscribe a { color: #9f9fa9; text-decoration: none; }
 
-pre, code { font-family: "Menlo", "Inconsolata", "Consolas", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace; color: #a9a9b3; font-size: 0.9375em; border: 0px solid #e8e8e8; background-color: #323443; }
+pre, code { font-family: "Menlo", "Inconsolata", "Consolas", "Roboto Mono", "Ubuntu Mono", "Liberation Mono", "Courier New", monospace; color: #ABB9D0; font-size: 0.9375em; border: 0px solid #e8e8e8; background-color: #373E4A; }
+
+.fa-tags:before { color: #9f9fa9; content: "\f02c"; }
+
+table th { color: #ABB9D0; background-color: #373E4A; border: 1px solid #323443; }
+
+table td { color: #ABB9D0; background-color: #373E4A; border: 1px solid #323443; }
 
 .language-python + .language-plaintext { border-left: 1px solid grey; margin-left: 1rem !important; }
 
