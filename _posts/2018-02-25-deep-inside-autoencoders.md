@@ -14,7 +14,7 @@ Autoencoders (AE) are neural networks that aims to copy their inputs to their ou
 1. **Encoder**: This is the part of the network that compresses the input into a latent-space representation. It can be represented by an encoding function $$ h=f(x) $$.
 2. **Decoder**: This part aims to reconstruct the input from the latent space representation. It can be represented by a decoding function $r=g(h)$.
 
-![]({{ site.baseurl }}/images/autoencoders/AE.png "Architecture of an autoencoder")
+<img src="{{ site.baseurl }}/images/autoencoders/AE.svg">
 
 ---
 

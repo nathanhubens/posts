@@ -23,7 +23,7 @@ Briefly, autoencoders are neural networks that aims to copy their inputs to thei
 
 2. **Decoder**: This part aims to reconstruct the input from the latent space representation. It can be represented by a decoding function $r=g(h)$.
 
-![]({{ site.baseurl }}/images/autoencoders/AE.png "The architecture of an autoencoder")
+<img src="{{ site.baseurl }}/images/autoencoders/AE.svg">
 
 <br>
 
@@ -87,7 +87,7 @@ distances, indices = nbrs.kneighbors(np.array(query_code))
 ## Results
 These are the images we retrieved, it looks great ! All the retrieved images are pretty similar to our query image and they also all correspond to the same digit. This shows that the autoencoder, even without being shown the corresponding labels of the images, has found a way to encode similar images in a very similar way.
 
-![]({{ site.baseurl }}/images/autoencoders/retrieved.png "The 5 retrieved images")
+![]({{ site.baseurl }}/images/autoencoders/retrieved.svg "The 5 retrieved images")
 
 ## Summary
 In this article, we learned to create a very simple image retrieval system by using an autoencoder and the nearest-neighbors algorithm. We proceeded by training our autoencoder on a big dataset, to make it learn the way to encode efficiently the visual content of each image. We then compared the code of our query image to the codes of our searching dataset and retrieve the 5 closest. We saw that our system was giving pretty good results as the visual content of our 5 retrieved images was close to our query image and also that they all represented the same digit, even without using any label in the process.
