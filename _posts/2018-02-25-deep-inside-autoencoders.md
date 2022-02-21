@@ -4,6 +4,7 @@ layout: post
 description: A brief overview of autoencoders
 categories: ["Deep Learning"]
 title: Deep Inside Autoencoders
+image: images/AE.png
 comments: true
 ---
 

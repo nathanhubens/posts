@@ -4,6 +4,7 @@ layout: post
 description: Image Retrieval with autoencoders
 categories: ["Deep Learning"]
 title: Build a simple Image Retrieval System with an Autoencoder
+image: images/retrieval.png
 comments: true
 ---
 

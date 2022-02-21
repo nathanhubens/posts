@@ -40,6 +40,11 @@ li .post-meta-description {
   
   }
 
+  .post-list li div.Box.box-shadow-medium.rounded-1.col-12{
+    background-color: #232427;
+    border-color: #232427;
+  }
+
   .page-content {
     text-align: justify;
   }
@@ -112,6 +117,8 @@ li .post-meta-description {
       font-weight: normal;
       color: #ff9021;
   }
+
+
   
   .page-meta a,  a:visited {
     color: #ff9021;
