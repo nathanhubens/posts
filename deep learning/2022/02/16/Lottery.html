@@ -140,22 +140,6 @@ window.onload = wrap_img;
     
 
     
-      
-        <div class="pb-5 d-flex flex-wrap flex-justify-end">
-          <div class="px-2">
-
-    <a href="https://github.com//posts/tree/master/_notebooks/2022-02-16-Lottery.ipynb" role="button" target="_blank">
-<img class="notebook-badge-image" src="/posts/assets/badges/github.svg" alt="View On GitHub">
-    </a>
-</div>
-
-          
-          <div class="px-2">
-    <a href="https://colab.research.google.com/github//posts/blob/master/_notebooks/2022-02-16-Lottery.ipynb" target="_blank">
-        <img class="notebook-badge-image" src="/posts/assets/badges/colab.svg" alt="Open In Colab"/>
-    </a>
-</div>
-        </div>
       </header>
 
   <div class="post-content e-content" itemprop="articleBody">
@@ -277,11 +261,11 @@ window.onload = wrap_img;
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The steps to unveil this winning ticket are:</p>
 <ol>
-<li>Get a freshly initialized network, possessing a set of weights $W_0$</li>
-<li>Train it for a certain amount $T$ of iterations, giving us the network with weights $W_T$</li>
+<li>Get a freshly initialized network, possessing a set of weights $W_0$.</li>
+<li>Train it for a certain amount $T$ of iterations, giving us the network with weights $W_T$.</li>
 <li>Prune a portion of the smallest weights, i.e. the weights that possess the lowest $l_1$-norm, giving us the network with weights $W_T \odot m$, with $m$ being a binary mask constituted of $0$ for weights we want to remove and $1$ for those we want to keep.</li>
 <li>Reinitialize the remaining weights to their original value, i.e. their value at step 1), giving us the network with weights $W_0 \odot m$.</li>
-<li>Stop if target sparsity is reached or go back to step 2)</li>
+<li>Stop if target sparsity is reached or go back to step 2).</li>
 </ol>
 
 </div>
